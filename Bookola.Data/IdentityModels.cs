@@ -28,10 +28,11 @@ namespace Bookola.WebAPI.Models
         {
         }
         public DbSet<Book> Books { get; set; }
-        public DbSet<GraphicNovel>GraphicNovels {get; set; }
+        public DbSet<GraphicNovel> GraphicNovels { get; set; }
         public DbSet<Magazine> Magazines { get; set; }
         public DbSet<Author> Authors { get; set; }
-        
+        public DbSet<Authorship> Authorships { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
@@ -42,9 +43,24 @@ namespace Bookola.WebAPI.Models
                 .Conventions
                 .Remove<PluralizingTableNameConvention>();
             modelBuilder
+                .Conventions
+                .Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder
                 .Configurations
                 .Add(new IdentityUserLoginConfiguration())
                 .Add(new IdentityUserRoleConfiguration());
+            modelBuilder
+                .Entity<GraphicNovel>()
+                .HasRequired(m => m.Writer)
+                .WithMany(m => m.WrittenGraphicNovels)
+                .HasForeignKey(m => m.WriterId)
+                .WillCascadeOnDelete(false);
+            modelBuilder
+               .Entity<GraphicNovel>()
+               .HasRequired(m => m.Artist)
+               .WithMany(m => m.DrawnGraphicNovels)
+               .HasForeignKey(m => m.ArtistId)
+               .WillCascadeOnDelete(false);
         }
     }
     public class IdentityUserLoginConfiguration : EntityTypeConfiguration<IdentityUserLogin>

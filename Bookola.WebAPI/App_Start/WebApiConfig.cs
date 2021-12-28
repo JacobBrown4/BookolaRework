@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Bookola.WebAPI
@@ -19,6 +20,10 @@ namespace Bookola.WebAPI
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            // Extra snippet to ignore null properties
+            config.Formatters.JsonFormatter.SerializerSettings =
+                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

@@ -4,19 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bookola.Data;
 
-namespace Bookola.Models
+namespace Bookola.Models.Authorship
 {
-    public class BookCreate
+    public class AuthorshipEdit
     {
-        [Required]
-        public string Title { get; set; }
-        [Required]
-        public long Isbn { get; set; }
+        [Key]
+        public int Id { get; set; }
+
         [Required]
         public int AuthorId { get; set; }
         [Required]
-        public BookGenre Genre { get; set; }
+        public int MagazineId { get; set; }
     }
 }

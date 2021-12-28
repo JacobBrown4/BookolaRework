@@ -40,6 +40,7 @@ namespace Bookola.Service
                     ctx
                     .Magazines
                     .Where(e => e.UserId == _userId)
+                    .AsEnumerable()
                     .Select(
                         e =>
                         new MagazineListItem
@@ -53,41 +54,41 @@ namespace Bookola.Service
             }
         }
 
-        public object GetMagazineById(int id)
+        public MagazineDetail GetMagazineById(int id)
         {
             using (var ctx = new ApplicationDbContext())
             {
-                var query =
-                    ctx
+                var entity =
+                ctx
                     .Magazines
-                    .Where(e => e.Id == id && e.UserId == _userId)
-                    .Select(
-                        e =>
-                        new MagazineListItem
-                        {
-                            Id = e.Id,
-                            Title = e.Title,
-                            Volume = e.Volume,
-                            Genre = e.Genre.ToString()
-                        });
-                return query.ToArray();
+                    .Single(e => e.Id == id && e.UserId == _userId);
+                return new MagazineDetail
+                {
+                    Id = entity.Id,
+                    Title = entity.Title,
+                    Volume = entity.Volume,
+                    Genre = entity.Genre.ToString(),
+                    Authors = entity.Authors.Select(e => e.Author.FullName()).ToList()
+                };
             }
         }
+
         public MagazineDetail GetMagazineByTitle(string title)
         {
             using (var ctx = new ApplicationDbContext())
             {
-            var entity = 
-                ctx
-                    .Magazines
-                    .Single(e => e.Title.Contains(title) && e.UserId == _userId);
-            return new MagazineDetail
-            {
-                Id = entity.Id,
-                Title = entity.Title,
-                Volume = entity.Volume,
-                Genre = entity.Genre.ToString()
-            };
+                var entity =
+                    ctx
+                        .Magazines
+                        .Single(e => e.Title.Contains(title) && e.UserId == _userId);
+                return new MagazineDetail
+                {
+                    Id = entity.Id,
+                    Title = entity.Title,
+                    Volume = entity.Volume,
+                    Genre = entity.Genre.ToString(),
+                    Authors = entity.Authors.Select(e => e.Author.FullName()).ToList()
+                };
             }
         }
         public object GetMagazineByVolume(int volume)
@@ -98,6 +99,7 @@ namespace Bookola.Service
                      ctx
                      .Magazines
                      .Where(e => e.Volume == volume && e.UserId == _userId)
+                     .AsEnumerable()
                      .Select(
                          e =>
                          new MagazineListItem
@@ -118,6 +120,7 @@ namespace Bookola.Service
                      ctx
                      .Magazines
                      .Where(e => e.IssueDate == issueDate && e.UserId == _userId)
+                     .AsEnumerable()
                      .Select(
                          e =>
                          new MagazineListItem
@@ -131,7 +134,7 @@ namespace Bookola.Service
                 return query.ToArray();
             }
         }
-        
+
         public object GetMagazineByGenre(MagazineGenre genre)
         {
             using (var ctx = new ApplicationDbContext())
@@ -140,6 +143,7 @@ namespace Bookola.Service
                      ctx
                      .Magazines
                      .Where(e => e.Genre == genre && e.UserId == _userId)
+                     .AsEnumerable()
                      .Select(
                          e =>
                          new MagazineListItem
@@ -148,7 +152,7 @@ namespace Bookola.Service
                              Title = e.Title,
                              Volume = e.Volume,
                              IssueDate = e.IssueDate,
-                             Genre = e.Genre.ToString()    
+                             Genre = e.Genre.ToString()
                          });
                 return query.ToArray();
 
@@ -186,7 +190,7 @@ namespace Bookola.Service
         {
             using (var ctx = new ApplicationDbContext())
             {
-                var entity = 
+                var entity =
                     ctx
                         .Magazines
                         .Single(e => e.Title == title && e.UserId == _userId);
@@ -196,5 +200,5 @@ namespace Bookola.Service
         }
     }
 }
-    
+
 

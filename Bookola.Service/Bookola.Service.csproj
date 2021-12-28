@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthorService.cs" />
+    <Compile Include="AuthorshipService.cs" />
     <Compile Include="BookService.cs" />
     <Compile Include="GraphicNovelService.cs" />
     <Compile Include="MagazineService.cs" />

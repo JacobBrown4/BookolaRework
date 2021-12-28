@@ -7,9 +7,9 @@ namespace Bookola.Models
 {
     public class AuthorCreate
     {
-        public int AuthorId { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
-        //public ICollection<Book> Books { get; set; }
     }
 }

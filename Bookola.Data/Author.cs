@@ -8,17 +8,20 @@ namespace Bookola.Data
     {
         [Key]
         public int AuthorId { get; set; }
+        [Required]
         public Guid UserId { get; set; }
         [Display(Name = "Full Name")]
-        public string FullName 
+        public string FullName()
         {
-            get => LastName + ", " + FirstName;
-            set { }
+            return LastName + ", " + FirstName;
         }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
-        public virtual ICollection<Book> Books { get; set; }
-        public virtual ICollection<Magazine> Magazines { get; set; }
-        public virtual ICollection<GraphicNovel> GraphicNovels { get; set; }
+        public virtual List<Authorship> Authorships { get; set; }
+        public virtual List<Book> Books { get; set; }
+        public virtual List<GraphicNovel> WrittenGraphicNovels { get; set; }
+        public virtual List<GraphicNovel> DrawnGraphicNovels { get; set; }
     }
 }

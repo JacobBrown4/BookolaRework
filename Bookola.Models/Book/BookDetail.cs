@@ -6,8 +6,8 @@ namespace Bookola.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public int AuthorId { get; set; }
+        public AuthorListItem Author { get; set; }
         public long Isbn { get; set; }
-        public BookGenre Genre { get; set; }
+        public string Genre { get; set; }
     }
 }

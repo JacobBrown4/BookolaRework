@@ -3,6 +3,7 @@ using System;
 using System.Web.Http;
 using Pubola.Services;
 using Bookola.Models;
+using Bookola.Models.Book;
 
 namespace Bookola.WebAPI.Controllers.BookController
 {
@@ -24,6 +25,20 @@ namespace Bookola.WebAPI.Controllers.BookController
             }
             var service = CreateBookService();
             if (!service.CreateBook(book))
+            {
+                return InternalServerError();
+            }
+            return Ok("Book was added!");
+        }
+        [Route("api/Book/CreateBookAndAuthor")]
+        public IHttpActionResult Post(BookAndAuthorCreate book)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var service = CreateBookService();
+            if (!service.CreateBookAndAuthor(book))
             {
                 return InternalServerError();
             }

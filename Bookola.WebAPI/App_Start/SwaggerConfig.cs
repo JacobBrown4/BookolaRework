@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Web.Http.Description;
 using System.Web.Http.Filters;
 using Bookola.WebAPI;
+
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
 namespace Bookola.WebAPI

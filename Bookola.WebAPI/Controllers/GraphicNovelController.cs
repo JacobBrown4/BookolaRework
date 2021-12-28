@@ -41,7 +41,7 @@ namespace Bookola.WebAPI.Controllers
         {
             GraphicNovelService graphicNovelService = CreateGraphicNovelService();
             var graphicNovel = graphicNovelService.GetGraphicNovelById(id);
-            return Ok();
+            return Ok(graphicNovel);
         }
         [Route("api/GraphicNovel/Update")]
         public IHttpActionResult Put(GraphicNovelEdit graphicNovel)

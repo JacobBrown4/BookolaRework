@@ -1,5 +1,7 @@
 using Bookola.Data;
 using Bookola.Models;
+using Bookola.Models.GraphicNovel;
+using Bookola.Models.Magazine;
 using Bookola.WebAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -37,13 +39,13 @@ namespace Bookola.Services
                     ctx
                     .Authors
                     .Where(e => e.UserId == _userId)
+                    .AsEnumerable()
                     .Select(
                         e =>
                             new AuthorListItem
                             {
                                 AuthorId = e.AuthorId,
-                                FirstName = e.FirstName,
-                                LastName = e.LastName
+                                FullName = e.FullName()
                             }
                         );
                 return query.ToArray();
@@ -64,8 +66,39 @@ namespace Bookola.Services
 
                     {
                         AuthorId = entity.AuthorId,
+                        FullName = entity.FullName(),
                         FirstName = entity.FirstName,
                         LastName = entity.LastName,
+                        Books = entity.Books.Select(b => new BookListItem()
+                        {
+                            Id = b.Id,
+                            Title = b.Title,
+                            AuthorId = b.AuthorId,
+                        }).ToList(),
+                        Magazines = entity.Authorships.Select(b => new MagazineListItem()
+                        {
+                            Id = b.Magazine.Id,
+                            Title = b.Magazine.Title,
+                            Volume = b.Magazine.Volume,
+                            IssueDate = b.Magazine.IssueDate,
+                            Genre = b.Magazine.Genre.ToString()
+                        }).ToList(),
+                        GraphicNovelsWritten = entity.WrittenGraphicNovels.Select(g => new GraphicNovelListItem()
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Volume = g.Volume,
+                            IssuedDate = g.IssuedDate,
+                            Genre = g.Genre.ToString()
+                        }).ToList(),
+                        GraphicNovelsDrawn = entity.DrawnGraphicNovels.Select(g => new GraphicNovelListItem()
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Volume = g.Volume,
+                            IssuedDate = g.IssuedDate,
+                            Genre = g.Genre.ToString()
+                        }).ToList()
                     };
             }
         }
@@ -84,8 +117,39 @@ namespace Bookola.Services
                     new AuthorDetail
                     {
                         AuthorId = entity.AuthorId,
+                        FullName = entity.FullName(),
                         FirstName = entity.FirstName,
                         LastName = entity.LastName,
+                        Books = entity.Books.Select(b => new BookListItem()
+                        {
+                            Id = b.Id,
+                            Title = b.Title,
+                            AuthorId = b.AuthorId,
+                        }).ToList(),
+                        Magazines = entity.Authorships.Select(b => new MagazineListItem()
+                        {
+                            Id = b.Magazine.Id,
+                            Title = b.Magazine.Title,
+                            Volume = b.Magazine.Volume,
+                            IssueDate = b.Magazine.IssueDate,
+                            Genre = b.Magazine.Genre.ToString()
+                        }).ToList(),
+                        GraphicNovelsWritten = entity.WrittenGraphicNovels.Select(g => new GraphicNovelListItem()
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Volume = g.Volume,
+                            IssuedDate = g.IssuedDate,
+                            Genre = g.Genre.ToString()
+                        }).ToList(),
+                        GraphicNovelsDrawn = entity.DrawnGraphicNovels.Select(g => new GraphicNovelListItem()
+                        {
+                            Id = g.Id,
+                            Title = g.Title,
+                            Volume = g.Volume,
+                            IssuedDate = g.IssuedDate,
+                            Genre = g.Genre.ToString()
+                        }).ToList()
                     };
             }
         }
@@ -97,7 +161,7 @@ namespace Bookola.Services
                     ctx
                         .Authors
                         .Single(e => e.AuthorId == model.AuthorId && e.UserId == _userId);
-                
+
                 entity.FirstName = model.FirstName;
                 entity.LastName = model.LastName;
 

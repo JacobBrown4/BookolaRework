@@ -13,9 +13,6 @@ namespace Bookola.Data
         public int Id { get; set; }
         [Required]
         public Guid UserId { get; set; }
-        [ForeignKey("Author")]
-        public ICollection<Author> Authors { get; set; }
-        public int AuthorId { get; set; }
         [Required]
         public string Title { get; set; }
         public int Volume { get; set; }
@@ -26,5 +23,11 @@ namespace Bookola.Data
         public DateTimeOffset IssuedDate { get; set; }
         [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
         public GraphicNovelGenre Genre { get; set; }
+        [ForeignKey(nameof(Writer))]
+        public int WriterId { get; set; }
+        public virtual Author Writer { get; set; }
+        [ForeignKey(nameof(Artist))]
+        public int ArtistId { get; set; }
+        public virtual Author Artist { get; set; }
     }
 }

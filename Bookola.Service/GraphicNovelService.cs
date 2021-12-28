@@ -1,4 +1,5 @@
 using Bookola.Data;
+using Bookola.Models;
 using Bookola.Models.GraphicNovel;
 using Bookola.WebAPI.Models;
 using System;
@@ -23,9 +24,11 @@ namespace Bookola.Service
                 UserId = _userId,
                 Title = Model.Title,
                 Volume = Model.Volume,
+                Isbn = Model.Isbn,
                 IssuedDate = Model.IssuedDate,
-                AuthorId = Model.AuthorId,
-                Genre = Model.Genre
+                Genre = Model.Genre,
+                WriterId = Model.WriterId,
+                ArtistId = Model.ArtistId
             };
             using (var ctx = new ApplicationDbContext())
             {
@@ -42,6 +45,7 @@ namespace Bookola.Service
                     ctx
                         .GraphicNovels
                         .Where(e => e.UserId == _userId)
+                        .AsEnumerable()
                         .Select(
                             e =>
                                 new GraphicNovelListItem
@@ -50,8 +54,7 @@ namespace Bookola.Service
                                     Title = e.Title,
                                     Volume = e.Volume,
                                     IssuedDate = e.IssuedDate,
-                                    AuthorId = e.AuthorId,
-                                    Genre = e.Genre
+                                    Genre = e.Genre.ToString()
                                 }
                         );
                 return query.ToArray();
@@ -68,14 +71,24 @@ namespace Bookola.Service
                         .Single(e => e.Id == id && e.UserId == _userId);
                 return
                     new GraphicNovelDetail
-                         {
-                                    Id = entity.Id,
-                                    Title = entity.Title,
-                                    Volume = entity.Volume,
-                                    IssuedDate = entity.IssuedDate,
-                                    AuthorId = entity.AuthorId,
-                                    Genre = entity.Genre
-                          };
+                    {
+                        Id = entity.Id,
+                        Title = entity.Title,
+                        Volume = entity.Volume,
+                        Isbn = entity.Isbn,
+                        IssuedDate = entity.IssuedDate,
+                        Genre = entity.Genre.ToString(),
+                        Writer = new AuthorListItem()
+                        {
+                            AuthorId = entity.WriterId,
+                            FullName = entity.Writer.FullName(),
+                        },
+                        Artist = new AuthorListItem()
+                        {
+                            AuthorId = entity.ArtistId,
+                            FullName = entity.Artist.FullName(),
+                        }
+                    };
             }
         }
 
@@ -90,10 +103,12 @@ namespace Bookola.Service
 
 
                 entity.Title = model.Title;
+                entity.Isbn = model.Isbn;
                 entity.Volume = model.Volume;
                 entity.IssuedDate = model.IssuedDate;
-                entity.AuthorId = model.AuthorId;
                 entity.Genre = model.Genre;
+                entity.ArtistId = model.ArtistId;
+                entity.WriterId = model.WriterId;
 
                 return ctx.SaveChanges() == 1;
             }

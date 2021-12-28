@@ -17,8 +17,7 @@ namespace Bookola.Data
         public Guid UserId { get; set; }
         [Required]
         public string Title { get; set; }
-        [ForeignKey("Author")]
-        public ICollection<Author> Authors { get; set; }
+        public virtual List<Authorship> Authors { get; set; }
         [Required]
         public int Volume { get; set; }
         [Required]

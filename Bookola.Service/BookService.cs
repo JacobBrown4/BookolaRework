@@ -1,5 +1,6 @@
 ﻿using Bookola.Data;
 using Bookola.Models;
+using Bookola.Models.Book;
 using Bookola.WebAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,36 @@ namespace Pubola.Services
             {
                 ctx.Books.Add(entity);
                 return ctx.SaveChanges() == 1;
+            }
+        }
+        public bool CreateBookAndAuthor(BookAndAuthorCreate model)
+        {
+            var entity =
+                new Book()
+                {
+                    UserId = _userId,
+                    Title = model.Title,
+                    Isbn = model.Isbn,
+                    Genre = model.Genre
+                };
+            var author = new Author()
+            {
+                FirstName = model.AuthorFirstName,
+                LastName = model.AuthorLastName,
+                UserId = _userId
+            };
+            using (var ctx = new ApplicationDbContext())
+            {
+                ctx.Authors.Add(author);
+                // Make sure author saved before going forward
+                if (ctx.SaveChanges() == 1)
+                {
+                    var savedAuthor = ctx.Authors.OrderByDescending(x => x.AuthorId).FirstOrDefault();
+                    entity.AuthorId = savedAuthor.AuthorId;
+                    ctx.Books.Add(entity);
+                    return ctx.SaveChanges() == 1;
+                }
+                return false;
             }
         }
         public IEnumerable<BookListItem> GetBooks()
@@ -64,9 +95,13 @@ namespace Pubola.Services
                     {
                         Id = entity.Id,
                         Title = entity.Title,
+                        Author = new AuthorListItem()
+                        {
+                            AuthorId = entity.AuthorId,
+                            FullName = entity.Author.FullName(),
+                        },
                         Isbn = entity.Isbn,
-                        AuthorId = entity.AuthorId,
-                        Genre = entity.Genre
+                        Genre = entity.Genre.ToString()
                     };
             }
         }
@@ -103,9 +138,13 @@ namespace Pubola.Services
                     {
                         Id = entity.Id,
                         Title = entity.Title,
-                        AuthorId = entity.AuthorId,
+                        Author = new AuthorListItem()
+                        {
+                            AuthorId = entity.AuthorId,
+                            FullName = entity.Author.FullName(),
+                        },
                         Isbn = entity.Isbn,
-                        Genre = entity.Genre
+                        Genre = entity.Genre.ToString()
                     };
             }
         }
@@ -122,9 +161,13 @@ namespace Pubola.Services
                     {
                         Id = entity.Id,
                         Title = entity.Title,
+                        Author = new AuthorListItem()
+                        {
+                            AuthorId = entity.AuthorId,
+                            FullName = entity.Author.FullName(),
+                        },
                         Isbn = entity.Isbn,
-                        AuthorId = entity.AuthorId,
-                        Genre = entity.Genre
+                        Genre = entity.Genre.ToString()
                     };
             }
         }

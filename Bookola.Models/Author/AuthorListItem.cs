@@ -7,9 +7,7 @@ namespace Bookola.Models
     public class AuthorListItem
     {
         public int AuthorId { get; set; }
-        [Display(Name = "First")]
-        public string FirstName { get; set; }
-        [Display(Name = "Last")]
-        public string LastName { get; set; }
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
     }
 }
